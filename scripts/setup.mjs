@@ -41,6 +41,10 @@ function askHidden(question) {
         };
         rl.question(question, (answer) => {
             rl.close();
+            // Solta o stdin: sem isso o Node pode abortar no exit (libuv/Windows).
+            if (process.stdin.isTTY && process.stdin.setRawMode) process.stdin.setRawMode(false);
+            process.stdin.pause();
+            process.stdin.unref();
             process.stdout.write("\n");
             resolve(answer);
         });
@@ -151,9 +155,18 @@ async function main() {
         return 0;
     } catch (err) {
         console.error(`FALHA no teste: ${err.message}`);
-        console.error("A chave foi salva. Rode 'node scripts/doctor.mjs' para diagnosticar.");
+        if (/HTTP 429|No deployments available/i.test(err.message)) {
+            console.error(
+                "\nIsso e indisponibilidade TEMPORARIA do gateway (modelo em cooldown ou rate limit),\n" +
+                    "nao um problema da chave: a autenticacao passou. Sua chave esta salva.\n" +
+                    "Aguarde alguns segundos e rode: node scripts/doctor.mjs"
+            );
+        } else {
+            console.error("A chave foi salva. Rode 'node scripts/doctor.mjs' para diagnosticar.");
+        }
         return 1;
     }
 }
 
-main().then((code) => process.exit(code));
+const exitCode = await main();
+process.exitCode = exitCode;

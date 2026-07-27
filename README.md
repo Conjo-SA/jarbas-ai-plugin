@@ -32,9 +32,14 @@ A delegação é imposta por hook, não apenas recomendada — ver
 
 ## Instalação
 
+Dentro do Claude Code, execute os três passos — `marketplace add` apenas registra a
+fonte, `install` copia o plugin e `reload-plugins` é o que efetivamente ativa
+comandos, agentes, skills, hooks e o servidor MCP:
+
 ```bash
 /plugin marketplace add Conjo-SA/jarbas-ai-plugin
 /plugin install jarbas-ai-plugin@conjo-sa-marketplace
+/reload-plugins
 ```
 
 Ou, para testar localmente a partir de um clone:
@@ -42,7 +47,32 @@ Ou, para testar localmente a partir de um clone:
 ```bash
 /plugin marketplace add /caminho/para/jarbas-ai-plugin
 /plugin install jarbas-ai-plugin@conjo-sa-marketplace
+/reload-plugins
 ```
+
+Confirme com `/plugin` que `jarbas-ai-plugin` aparece como habilitado e que
+`/jarbas-ai-plugin:setup` já é reconhecido.
+
+### Atualizar para uma versão nova
+
+O Claude Code mantém um snapshot do marketplace em
+`~/.claude/plugins/marketplaces/conjo-sa-marketplace`. Depois de um novo push,
+atualize esse cache antes de reinstalar — caso contrário ele reinstala a versão antiga:
+
+```bash
+/plugin marketplace update conjo-sa-marketplace
+/plugin install jarbas-ai-plugin@conjo-sa-marketplace
+/reload-plugins
+```
+
+### Problemas na instalação
+
+| Sintoma | Causa | Solução |
+|---|---|---|
+| `Unknown command: /jarbas-ai-plugin:setup` | plugin instalado mas não recarregado | `/reload-plugins` (ou reinicie o Claude Code) |
+| `Unknown command` logo após `marketplace add` | o `add` não instala | rodar `/plugin install ...` |
+| `invalid manifest file` com versão já corrigida | cache do marketplace desatualizado | `/plugin marketplace update conjo-sa-marketplace` |
+| ferramentas `mcp__jarbas__*` ausentes | MCP é carregado na inicialização | reiniciar o Claude Code |
 
 ## Setup da chave
 
@@ -215,6 +245,7 @@ node scripts/doctor.mjs --offline  # só estrutura
 | `Chave de API nao configurada` | setup não executado | `/jarbas-ai-plugin:setup` |
 | HTTP 401/403 | chave inválida ou `apiType` errado | conferir chave e `apiType` |
 | HTTP 404 | rota não padrão | `JARBAS_ENDPOINT_PATH=/v1/chat/completions` |
+| HTTP 429 `No deployments available` | gateway sem deployment/rate limit — **a chave está OK** | aguardar alguns segundos e repetir |
 | `model not found` | `id` divergente do gateway | ajustar `models[].id` |
 | timeout | gateway atrás de VPN/proxy | verificar rede |
 | `Politica jarbas-ai-plugin` ao editar | escrita sem delegação prévia | chamar `mcp__jarbas__implement` antes, ou `JARBAS_ENFORCE=off` |
