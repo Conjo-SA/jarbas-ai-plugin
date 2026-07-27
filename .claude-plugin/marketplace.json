@@ -12,7 +12,7 @@
             "name": "jarbas-ai-plugin",
             "source": "./",
             "description": "Claude Code planeja e orquestra; a escrita de codigo e delegada a um modelo externo (endpoint OpenAI-compatible) via subagent + MCP, com bloqueio por hook. A chave e pedida no setup.",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "category": "development"
         }
     ]

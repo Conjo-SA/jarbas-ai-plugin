@@ -53,8 +53,11 @@ if (state.credits > 0 && Date.now() < state.allowedUntil) {
 
 deny(
     "Politica jarbas-ai-plugin: a escrita de codigo deve vir do modelo externo.\n" +
-    "Chame mcp__jarbas__implement (ou delegue ao subagent 'implementer') com a tarefa " +
-    "e o contexto do repositorio, e aplique os blocos '### FILE:' retornados.\n" +
+    "Chame a ferramenta 'implement' do MCP jarbas (nome completo: " +
+    "mcp__plugin_jarbas-ai-plugin_jarbas__implement quando instalado como plugin, " +
+    "ou mcp__jarbas__implement quando o MCP e configurado direto), ou delegue ao " +
+    "subagent 'implementer', com a tarefa e o contexto do repositorio; depois aplique " +
+    "os blocos '### FILE:' retornados.\n" +
     "Se a chave nao estiver configurada, rode /jarbas-ai-plugin:setup.\n" +
     "Para desativar esta politica nesta sessao, o USUARIO deve definir JARBAS_ENFORCE=off."
 );

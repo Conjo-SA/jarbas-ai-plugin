@@ -12,7 +12,7 @@ repositório e nunca versionada.
 flowchart LR
     U[Você] --> O[Claude Code<br/>modelo padrão]
     O -->|planeja e divide| S[subagent implementer]
-    S -->|mcp__jarbas__implement| M[Modelo externo<br/>config.json]
+    S -->|implement| M[Modelo externo<br/>config.json]
     M -->|código gerado| S
     S -->|Write/Edit| H{hook PreToolUse}
     H -->|delegou: libera| F[(arquivos + testes)]
@@ -191,11 +191,14 @@ sobre o `config.json` do repositório.
 
 ## Ferramentas MCP
 
-| Ferramenta | Descrição |
-|---|---|
-| `mcp__jarbas__implement` | gera código no modelo externo (blocos `### FILE:`) |
-| `mcp__jarbas__review` | revisa diff (blockers, riscos, sugestões) |
-| `mcp__jarbas__status` | config, modelo, URL efetiva e origem da chave |
+O Claude Code prefixa ferramentas MCP vindas de plugins, por isso cada uma tem dois
+nomes possíveis:
+
+| Ferramenta | Nome como plugin | Nome como MCP direto | Descrição |
+|---|---|---|---|
+| `implement` | `mcp__plugin_jarbas-ai-plugin_jarbas__implement` | `mcp__jarbas__implement` | gera código no modelo externo (blocos `### FILE:`) |
+| `review` | `mcp__plugin_jarbas-ai-plugin_jarbas__review` | `mcp__jarbas__review` | revisa diff (blockers, riscos, sugestões) |
+| `status` | `mcp__plugin_jarbas-ai-plugin_jarbas__status` | `mcp__jarbas__status` | config, modelo, URL efetiva e origem da chave |
 
 ## Enforcement da delegação
 

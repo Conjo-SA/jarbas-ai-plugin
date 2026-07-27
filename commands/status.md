@@ -1,12 +1,14 @@
 ---
 description: Diagnostica a configuracao do plugin - config em uso, modelo, URL efetiva, origem da chave e conexao com o endpoint.
 argument-hint: "[--offline]"
-allowed-tools: Bash(node:*), Read, mcp__jarbas__status
+allowed-tools: Bash(node:*), Read, mcp__plugin_jarbas-ai-plugin_jarbas__status, mcp__jarbas__status
 ---
 
 # Diagnostico
 
-1. Chame `mcp__jarbas__status` e mostre o resultado.
+1. Chame a ferramenta `status` do MCP `jarbas` e mostre o resultado. O nome pode
+   ser `mcp__plugin_jarbas-ai-plugin_jarbas__status` (plugin) ou
+   `mcp__jarbas__status` (MCP direto) — use o que existir na sua lista.
 2. Rode:
    ```bash
    node "${CLAUDE_PLUGIN_ROOT}/scripts/doctor.mjs" $ARGUMENTS

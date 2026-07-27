@@ -1,7 +1,7 @@
 ---
 description: Configura a chave de acesso ao modelo externo de implementacao (executado no terminal do usuario) e verifica a conexao.
 argument-hint: "(sem argumentos)"
-allowed-tools: Bash(node:*), Read, mcp__jarbas__status
+allowed-tools: Bash(node:*), Read, mcp__plugin_jarbas-ai-plugin_jarbas__status, mcp__jarbas__status
 ---
 
 # Setup do modelo de implementacao
@@ -10,8 +10,10 @@ Objetivo: deixar o plugin pronto para delegar a implementacao ao modelo externo.
 
 ## 1. Verifique o estado atual
 
-Chame `mcp__jarbas__status` e mostre: config em uso, modelo, URL efetiva e se a
-chave ja esta configurada.
+Chame a ferramenta `status` do MCP `jarbas` (o nome completo e
+`mcp__plugin_jarbas-ai-plugin_jarbas__status` quando instalado como plugin, ou
+`mcp__jarbas__status` quando o MCP e configurado direto) e mostre: config em uso,
+modelo, URL efetiva e se a chave ja esta configurada.
 
 Se a chave ja estiver OK, informe e pergunte se o usuario quer trocar. Nao
 prossiga sem necessidade.

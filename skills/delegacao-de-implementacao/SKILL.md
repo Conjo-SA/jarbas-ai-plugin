@@ -28,12 +28,12 @@ flowchart LR
     B --> C{Chave configurada?}
     C -- nao --> D[/jarbas-ai-plugin:setup/]
     C -- sim --> E[Subagent implementer]
-    E --> F[mcp__jarbas__implement<br/>modelo externo]
+    E --> F[ferramenta implement<br/>modelo externo]
     F --> G[Aplica arquivos + roda testes]
     G --> H[Orquestrador integra e reporta]
 ```
 
-1. Antes de delegar, confirme a configuracao com `mcp__jarbas__status`.
+1. Antes de delegar, confirme a configuracao com a ferramenta `status`.
 2. Quebre o trabalho em unidades independentes e testaveis.
 3. Dispare um subagent `implementer` por unidade, com prompt **autocontido**
    (o subagent e o modelo externo nao veem a conversa).
@@ -43,7 +43,7 @@ flowchart LR
 
 - O orquestrador **nao escreve codigo**, nem "so uma linha".
 - O subagent `implementer` **nao escreve codigo** de conhecimento proprio: ele
-  chama `mcp__jarbas__implement` e aplica a saida.
+  chama `implement` e aplica a saida.
 - Falha do endpoint = pare e reporte. Nao faca fallback silencioso para o modelo
   do Claude Code; isso mudaria o autor do codigo sem o usuario saber.
 - Fallback so com autorizacao explicita do usuario, e deve constar no relatorio.
@@ -54,11 +54,11 @@ flowchart LR
 
 Um hook `PreToolUse` **nega** `Write`, `Edit`, `MultiEdit` e `NotebookEdit`
 enquanto nao existir credito de delegacao na sessao. O credito e concedido por um
-hook `PostToolUse` apos cada chamada bem-sucedida a `mcp__jarbas__implement`
+hook `PostToolUse` apos cada chamada bem-sucedida a `implement`
 (50 escritas, validade de 1 hora).
 
 - Excecao: arquivos `.md`, `.markdown`, `.txt`, `.rst`, `.adoc` sao sempre liberados.
-- Se voce for bloqueado, **nao contorne**: chame `mcp__jarbas__implement` com a
+- Se voce for bloqueado, **nao contorne**: chame `implement` com a
   tarefa e o contexto, e aplique os blocos `### FILE:` retornados.
 - Escrever arquivo via `Bash` (redirecionamento, heredoc) para burlar o hook e
   violacao da politica.
@@ -78,11 +78,17 @@ Contexto pobre e a causa numero um de codigo gerado que nao compila.
 
 ## Ferramentas MCP disponiveis
 
-| Ferramenta | Uso |
-|---|---|
-| `mcp__jarbas__implement` | gerar/alterar codigo (retorna blocos `### FILE:`) |
-| `mcp__jarbas__review` | revisar diff (blockers, riscos, sugestoes) |
-| `mcp__jarbas__status` | config em uso, modelo, URL efetiva, origem da chave |
+O Claude Code prefixa ferramentas MCP vindas de plugins. Use o nome que existir na
+sua lista de ferramentas — nao assuma um deles:
+
+| Ferramenta | Nome como plugin | Nome como MCP direto | Uso |
+|---|---|---|---|
+| `implement` | `mcp__plugin_jarbas-ai-plugin_jarbas__implement` | `mcp__jarbas__implement` | gerar/alterar codigo (blocos `### FILE:`) |
+| `review` | `mcp__plugin_jarbas-ai-plugin_jarbas__review` | `mcp__jarbas__review` | revisar diff (blockers, riscos, sugestoes) |
+| `status` | `mcp__plugin_jarbas-ai-plugin_jarbas__status` | `mcp__jarbas__status` | config, modelo, URL efetiva, origem da chave |
+
+Se nenhuma das variantes aparecer, o servidor MCP nao carregou: pare e peca ao
+usuario rodar `/reload-plugins` ou reiniciar o Claude Code.
 
 ## Configuracao do endpoint
 

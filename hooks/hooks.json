@@ -13,7 +13,7 @@
         ],
         "PostToolUse": [
             {
-                "matcher": "mcp__jarbas__implement",
+                "matcher": "mcp__.*jarbas.*__implement",
                 "hooks": [
                     {
                         "type": "command",

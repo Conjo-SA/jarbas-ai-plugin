@@ -1,7 +1,7 @@
 ---
 description: Planeja com o modelo padrao do Claude Code e delega a escrita do codigo ao modelo externo, via subagents implementer.
 argument-hint: "<o que deve ser implementado>"
-allowed-tools: Read, Grep, Glob, Bash, Task, mcp__jarbas__status
+allowed-tools: Read, Grep, Glob, Bash, Task, mcp__plugin_jarbas-ai-plugin_jarbas__status, mcp__jarbas__status
 ---
 
 # Implementar delegando ao modelo externo
@@ -15,7 +15,9 @@ modelo externo configurado.
 ## Passos
 
 1. **Pre-checagem**
-   Chame `mcp__jarbas__status`. Se a chave nao estiver configurada, pare e oriente
+   Chame a ferramenta `status` do MCP `jarbas` (`mcp__plugin_jarbas-ai-plugin_jarbas__status`
+   quando instalado como plugin, ou `mcp__jarbas__status` quando o MCP e direto).
+   Se a chave nao estiver configurada, pare e oriente
    o usuario a rodar `/jarbas-ai-plugin:setup`.
 
 2. **Entender o repositorio** (voce faz, com Read/Grep/Glob)
