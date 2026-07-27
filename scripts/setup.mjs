@@ -158,8 +158,8 @@ async function main() {
         if (/HTTP 429|No deployments available/i.test(err.message)) {
             console.error(
                 "\nIsso e indisponibilidade TEMPORARIA do gateway (modelo em cooldown ou rate limit),\n" +
-                    "nao um problema da chave: a autenticacao passou. Sua chave esta salva.\n" +
-                    "Aguarde alguns segundos e rode: node scripts/doctor.mjs"
+                "nao um problema da chave: a autenticacao passou. Sua chave esta salva.\n" +
+                "Aguarde alguns segundos e rode: node scripts/doctor.mjs"
             );
         } else {
             console.error("A chave foi salva. Rode 'node scripts/doctor.mjs' para diagnosticar.");

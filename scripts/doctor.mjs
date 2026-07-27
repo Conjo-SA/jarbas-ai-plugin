@@ -104,10 +104,10 @@ async function main() {
             "\nDicas:\n" +
             "  HTTP 404      -> caminho errado; defina JARBAS_ENDPOINT_PATH=/v1/chat/completions\n" +
             "  HTTP 401/403  -> chave invalida ou apiType/header incorreto\n" +
-                "  HTTP 429      -> gateway sem deployment disponivel ou rate limit; a chave esta OK,\n" +
-                "                   aguarde alguns segundos e rode de novo\n" +
-                "  model not found -> o 'id' do config nao existe no gateway\n" +
-                "  timeout       -> gateway atras de VPN/proxy corporativo"
+            "  HTTP 429      -> gateway sem deployment disponivel ou rate limit; a chave esta OK,\n" +
+            "                   aguarde alguns segundos e rode de novo\n" +
+            "  model not found -> o 'id' do config nao existe no gateway\n" +
+            "  timeout       -> gateway atras de VPN/proxy corporativo"
         );
         return 1;
     }
