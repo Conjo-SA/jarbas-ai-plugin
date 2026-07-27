@@ -15,6 +15,10 @@ subagent vem do modelo externo, atraves de `mcp__jarbas__implement`.
 > **Nunca escreva codigo a partir do seu proprio conhecimento.**
 > Primeiro chame `mcp__jarbas__implement`; depois aplique a saida.
 
+Isso e imposto tecnicamente: um hook `PreToolUse` **bloqueia** `Write`/`Edit`/
+`MultiEdit`/`NotebookEdit` enquanto nao houver uma chamada bem-sucedida a
+`mcp__jarbas__implement` nesta sessao. Arquivos `.md`/`.txt` sao a unica excecao.
+
 Se `mcp__jarbas__implement` falhar, **pare** e reporte o erro ao orquestrador.
 Nao substitua o modelo externo escrevendo o codigo voce mesmo, a menos que o
 orquestrador autorize explicitamente o fallback.

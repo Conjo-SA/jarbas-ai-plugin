@@ -14,9 +14,15 @@ flowchart LR
     O -->|planeja e divide| S[subagent implementer]
     S -->|mcp__jarbas__implement| M[Modelo externo<br/>config.json]
     M -->|código gerado| S
-    S -->|aplica arquivos + testes| O
+    S -->|Write/Edit| H{hook PreToolUse}
+    H -->|delegou: libera| F[(arquivos + testes)]
+    H -->|não delegou: nega| S
+    F --> O
     O --> U
 ```
+
+A delegação é imposta por hook, não apenas recomendada — ver
+[Enforcement da delegação](#enforcement-da-delegação).
 
 ## Requisitos
 
@@ -96,6 +102,17 @@ sobre o `config.json` do repositório.
 **Precedência do config:** `$JARBAS_CONFIG` › `~/.jarbas-ai/config.json` › `<plugin>/config.json`
 **Precedência da chave:** variável citada em `apiKey` (`${env:VAR}`) › `JARBAS_API_KEY` › `~/.jarbas-ai/credentials.json`
 
+## Variáveis de ambiente
+
+| Variável | Efeito |
+|---|---|
+| `JARBAS_API_KEY` | chave do endpoint (alternativa ao arquivo de credenciais) |
+| `JARBAS_CONFIG` | caminho de um `config.json` específico |
+| `JARBAS_MODEL` | força o `id` do modelo a usar |
+| `JARBAS_ENDPOINT_PATH` | sobrescreve a rota (ex.: `/v1/chat/completions`) |
+| `JARBAS_HOME` | diretório de credenciais e estado (padrão `~/.jarbas-ai`) |
+| `JARBAS_ENFORCE` | `off` desativa o bloqueio de escrita sem delegação |
+
 ## Formato do config.json
 
 ```json
@@ -131,6 +148,10 @@ sobre o `config.json` do repositório.
 | [.mcp.json](.mcp.json) | registra o servidor MCP `jarbas` |
 | [mcp/server.mjs](mcp/server.mjs) | servidor MCP stdio (sem dependências) |
 | [lib/endpoint.mjs](lib/endpoint.mjs) | config, credenciais e chamada ao modelo |
+| [lib/state.mjs](lib/state.mjs) | estado por sessão usado pelos hooks |
+| [hooks/hooks.json](hooks/hooks.json) | registra os hooks de enforcement |
+| [hooks/enforce_delegation.mjs](hooks/enforce_delegation.mjs) | bloqueia `Write`/`Edit` fora da delegação |
+| [hooks/record_delegation.mjs](hooks/record_delegation.mjs) | libera escrita após uma delegação |
 | [agents/implementer.md](agents/implementer.md) | subagent que delega a escrita de código |
 | [commands/setup.md](commands/setup.md) | `/jarbas-ai-plugin:setup` |
 | [commands/implementar.md](commands/implementar.md) | `/jarbas-ai-plugin:implementar` |
@@ -145,6 +166,32 @@ sobre o `config.json` do repositório.
 | `mcp__jarbas__implement` | gera código no modelo externo (blocos `### FILE:`) |
 | `mcp__jarbas__review` | revisa diff (blockers, riscos, sugestões) |
 | `mcp__jarbas__status` | config, modelo, URL efetiva e origem da chave |
+
+## Enforcement da delegação
+
+A delegação não é só uma instrução: um hook `PreToolUse` **bloqueia** `Write`,
+`Edit`, `MultiEdit` e `NotebookEdit` enquanto não houver uma chamada bem-sucedida
+a `mcp__jarbas__implement` na sessão. Cada delegação libera 50 escritas por 1 hora.
+
+- Arquivos `.md`, `.markdown`, `.txt`, `.rst` e `.adoc` são sempre liberados.
+- O estado fica em `~/.jarbas-ai/state/<session-id>.json` e é limpo após 7 dias.
+- Para desligar: `JARBAS_ENFORCE=off` no ambiente antes de abrir o Claude Code.
+
+**Limitação conhecida:** o hook cobre as ferramentas de edição. Escrita via `Bash`
+(redirecionamento, `heredoc`, `sed -i`) não é interceptada — a política do agente
+proíbe, mas não há bloqueio técnico nesse caminho.
+
+## O que sai da sua máquina
+
+| Vai para o endpoint | Não vai |
+|---|---|
+| a tarefa formulada pelo subagent | o histórico da conversa |
+| o contexto que ele coletou (trechos de arquivos, assinaturas, erros de build) | o repositório inteiro |
+| o diff enviado a `review` | saída de terminal não incluída explicitamente |
+
+Nada é enviado antes de a chave ser configurada. **Nenhum código é executado no
+endpoint** — ele devolve texto; build, testes e `Bash` rodam na sua máquina.
+Planejamento, leitura de arquivos e busca continuam no modelo padrão do Claude Code.
 
 ## Segurança
 
@@ -170,3 +217,5 @@ node scripts/doctor.mjs --offline  # só estrutura
 | HTTP 404 | rota não padrão | `JARBAS_ENDPOINT_PATH=/v1/chat/completions` |
 | `model not found` | `id` divergente do gateway | ajustar `models[].id` |
 | timeout | gateway atrás de VPN/proxy | verificar rede |
+| `Politica jarbas-ai-plugin` ao editar | escrita sem delegação prévia | chamar `mcp__jarbas__implement` antes, ou `JARBAS_ENFORCE=off` |
+| hooks não disparam | plugin carregado antes da atualização | reiniciar a sessão do Claude Code |

@@ -50,6 +50,20 @@ flowchart LR
 - Nunca pedir, exibir ou gravar a chave de API. Ela vive em
   `~/.jarbas-ai/credentials.json` (600) ou em variavel de ambiente.
 
+## Enforcement (nao e so recomendacao)
+
+Um hook `PreToolUse` **nega** `Write`, `Edit`, `MultiEdit` e `NotebookEdit`
+enquanto nao existir credito de delegacao na sessao. O credito e concedido por um
+hook `PostToolUse` apos cada chamada bem-sucedida a `mcp__jarbas__implement`
+(50 escritas, validade de 1 hora).
+
+- Excecao: arquivos `.md`, `.markdown`, `.txt`, `.rst`, `.adoc` sao sempre liberados.
+- Se voce for bloqueado, **nao contorne**: chame `mcp__jarbas__implement` com a
+  tarefa e o contexto, e aplique os blocos `### FILE:` retornados.
+- Escrever arquivo via `Bash` (redirecionamento, heredoc) para burlar o hook e
+  violacao da politica.
+- Somente o usuario pode desligar, definindo `JARBAS_ENFORCE=off` no ambiente.
+
 ## Qualidade do contexto enviado ao modelo externo
 
 O modelo externo so conhece o que voce mandar. Envie:

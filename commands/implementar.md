@@ -50,7 +50,11 @@ modelo externo configurado.
 
 ## Limites
 
-- Nao gere codigo diretamente, mesmo que pareca trivial.
+- Nao gere codigo diretamente, mesmo que pareca trivial. Um hook `PreToolUse`
+  **nega** `Write`/`Edit`/`MultiEdit`/`NotebookEdit` sem delegacao previa; se voce
+  for bloqueado, delegue em vez de tentar contornar (inclusive via `Bash`).
+- Arquivos `.md`/`.txt` sao a unica excecao liberada pelo hook.
 - Excecao unica: o usuario autorizar fallback explicitamente, ou o endpoint estar
-  indisponivel **e** o usuario pedir para prosseguir sem ele. Registre isso no relatorio.
+  indisponivel **e** o usuario pedir para prosseguir sem ele (nesse caso ele mesmo
+  precisa definir `JARBAS_ENFORCE=off`). Registre isso no relatorio.
 - Nao invente credenciais, URLs ou nomes de modelo.

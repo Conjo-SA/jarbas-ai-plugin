@@ -72,3 +72,8 @@ Interprete a saida. Em caso de falha, use a tabela de diagnostico da skill
 Explique em 3 linhas: a partir de agora, `/jarbas-ai-plugin:implementar` delega a
 escrita de codigo ao modelo externo; o modelo padrao do Claude Code continua
 cuidando de planejamento, leitura do repositorio e revisao.
+
+Avise tambem que a delegacao e imposta por hook: `Write`/`Edit`/`MultiEdit`/
+`NotebookEdit` sao bloqueados enquanto nao houver uma chamada bem-sucedida a
+`mcp__jarbas__implement` na sessao (arquivos `.md`/`.txt` sao excecao). Para
+desativar, o proprio usuario define `JARBAS_ENFORCE=off` no ambiente.
