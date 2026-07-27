@@ -1,0 +1,17 @@
+    {
+        "name": "https://polyglot.hub.conjochat.conjosa.com.br/",
+        "vendor": "customendpoint",
+        "apiKey": "${env:JARBAS_API_KEY}",
+        "apiType": "chat-completions",
+        "models": [
+            {
+                "id": "Polyglot-Codex",
+                "name": "Polyglot-Codex",
+                "url": "https://polyglot.hub.conjochat.conjosa.com.br/",
+                "toolCalling": true,
+                "vision": true,
+                "maxInputTokens": 128000,
+                "maxOutputTokens": 65536
+            }
+        ]
+    }

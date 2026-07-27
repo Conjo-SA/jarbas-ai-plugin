@@ -1,0 +1,15 @@
+# segredos — nunca commitar
+.env
+*.key
+credentials.json
+.jarbas-ai/
+
+# node
+node_modules/
+npm-debug.log*
+
+# SO / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

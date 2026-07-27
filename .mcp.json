@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "jarbas": {
+            "command": "node",
+            "args": [
+                "${CLAUDE_PLUGIN_ROOT}/mcp/server.mjs"
+            ],
+            "env": {
+                "JARBAS_PLUGIN_ROOT": "${CLAUDE_PLUGIN_ROOT}"
+            }
+        }
+    }
+}

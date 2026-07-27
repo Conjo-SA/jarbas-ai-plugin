@@ -1,0 +1,20 @@
+---
+description: Diagnostica a configuracao do plugin - config em uso, modelo, URL efetiva, origem da chave e conexao com o endpoint.
+argument-hint: "[--offline]"
+allowed-tools: Bash(node:*), Read, mcp__jarbas__status
+---
+
+# Diagnostico
+
+1. Chame `mcp__jarbas__status` e mostre o resultado.
+2. Rode:
+   ```bash
+   node "${CLAUDE_PLUGIN_ROOT}/scripts/doctor.mjs" $ARGUMENTS
+   ```
+3. Explique cada ERRO/AVISO e a correcao concreta:
+   - chave ausente -> `/jarbas-ai-plugin:setup`
+   - HTTP 404 -> definir `JARBAS_ENDPOINT_PATH` (ex: `/v1/chat/completions`)
+   - HTTP 401/403 -> chave invalida ou `apiType` incorreto
+   - `model not found` -> `id` do modelo divergente do gateway
+   - segredo literal em `apiKey` -> trocar por `${env:...}` e **rotacionar a chave**
+4. Nunca peca, exiba ou grave o valor da chave.
