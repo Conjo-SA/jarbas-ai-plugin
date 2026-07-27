@@ -13,9 +13,6 @@
         "mcp",
         "openai-compatible"
     ],
-    "commands": "./commands",
-    "agents": "./agents",
-    "skills": "./skills",
     "hooks": "./hooks/hooks.json",
     "mcpServers": "./.mcp.json"
 }
