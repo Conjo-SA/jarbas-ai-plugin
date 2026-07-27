@@ -1,10 +1,10 @@
 {
-    "name": "conjosa-marketplace",
+    "name": "conjo-sa-marketplace",
     "owner": {
-        "name": "ConjoSA"
+        "name": "Conjo-SA"
     },
     "metadata": {
-        "description": "Plugins internos ConjoSA para Claude Code",
+        "description": "Plugins internos Conjo-SA para Claude Code",
         "version": "0.1.0"
     },
     "plugins": [

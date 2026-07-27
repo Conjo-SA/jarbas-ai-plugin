@@ -33,15 +33,15 @@ A delegação é imposta por hook, não apenas recomendada — ver
 ## Instalação
 
 ```bash
-/plugin marketplace add ConjoSA/jarbas-ai-plugin
-/plugin install jarbas-ai-plugin@conjosa-marketplace
+/plugin marketplace add Conjo-SA/jarbas-ai-plugin
+/plugin install jarbas-ai-plugin@conjo-sa-marketplace
 ```
 
 Ou, para testar localmente a partir de um clone:
 
 ```bash
 /plugin marketplace add /caminho/para/jarbas-ai-plugin
-/plugin install jarbas-ai-plugin@conjosa-marketplace
+/plugin install jarbas-ai-plugin@conjo-sa-marketplace
 ```
 
 ## Setup da chave

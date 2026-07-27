@@ -3,9 +3,9 @@
     "version": "0.1.0",
     "description": "Mantem o modelo padrao do Claude Code para orquestrar e delega a implementacao de codigo a um modelo externo (endpoint OpenAI-compatible) via subagent + MCP. A delegacao e imposta por hook e a chave de acesso e pedida no setup.",
     "author": {
-        "name": "ConjoSA"
+        "name": "Conjo-SA"
     },
-    "homepage": "https://github.com/ConjoSA/jarbas-ai-plugin",
+    "homepage": "https://github.com/Conjo-SA/jarbas-ai-plugin",
     "keywords": [
         "subagent",
         "delegation",
