@@ -110,13 +110,28 @@ Reinicie a sessão do Claude Code após o setup para o servidor MCP recarregar.
 
 ## Uso
 
+Basta pedir em linguagem natural — **não precisa invocar o plugin**:
+
+```
+Crie uma página de vendas
+```
+
+Um hook `UserPromptSubmit` injeta a política em todo turno, então o Claude Code
+já sabe que deve: esclarecer o que ficou vago (até 3 perguntas), ler o repositório,
+planejar, delegar cada unidade ao subagent `implementer` — que chama o modelo
+externo — e depois integrar e testar.
+
+Os comandos explícitos continuam disponíveis quando você quiser forçar o fluxo ou
+diagnosticar:
+
 ```
 /jarbas-ai-plugin:implementar adicionar paginação no endpoint /clientes
 /jarbas-ai-plugin:status
+/jarbas-ai-plugin:setup
 ```
 
-Você também pode simplesmente pedir a implementação em linguagem natural: a skill
-`delegacao-de-implementacao` ativa a política automaticamente.
+Perguntas, explicações e leitura de código não acionam a delegação — só pedidos que
+produzem código.
 
 ## Usar seu próprio endpoint
 
@@ -180,6 +195,7 @@ sobre o `config.json` do repositório.
 | [lib/endpoint.mjs](lib/endpoint.mjs) | config, credenciais e chamada ao modelo |
 | [lib/state.mjs](lib/state.mjs) | estado por sessão usado pelos hooks |
 | [hooks/hooks.json](hooks/hooks.json) | registra os hooks de enforcement |
+| [hooks/inject_policy.mjs](hooks/inject_policy.mjs) | injeta a política a cada prompt (invocação nativa) |
 | [hooks/enforce_delegation.mjs](hooks/enforce_delegation.mjs) | bloqueia `Write`/`Edit` fora da delegação |
 | [hooks/record_delegation.mjs](hooks/record_delegation.mjs) | libera escrita após uma delegação |
 | [agents/implementer.md](agents/implementer.md) | subagent que delega a escrita de código |
@@ -202,13 +218,16 @@ nomes possíveis:
 
 ## Enforcement da delegação
 
-A delegação não é só uma instrução: um hook `PreToolUse` **bloqueia** `Write`,
-`Edit`, `MultiEdit` e `NotebookEdit` enquanto não houver uma chamada bem-sucedida
-a `mcp__jarbas__implement` na sessão. Cada delegação libera 50 escritas por 1 hora.
+Dois hooks garantem o comportamento, sem depender de o modelo "lembrar" da política:
+
+- `UserPromptSubmit` — injeta a política de delegação a cada turno (invocação nativa).
+- `PreToolUse` — **bloqueia** `Write`, `Edit`, `MultiEdit` e `NotebookEdit` enquanto
+  não houver uma chamada bem-sucedida à ferramenta `implement` na sessão. Cada
+  delegação libera 50 escritas por 1 hora (concedidas pelo hook `PostToolUse`).
 
 - Arquivos `.md`, `.markdown`, `.txt`, `.rst` e `.adoc` são sempre liberados.
 - O estado fica em `~/.jarbas-ai/state/<session-id>.json` e é limpo após 7 dias.
-- Para desligar: `JARBAS_ENFORCE=off` no ambiente antes de abrir o Claude Code.
+- Para desligar tudo: `JARBAS_ENFORCE=off` no ambiente antes de abrir o Claude Code.
 
 **Limitação conhecida:** o hook cobre as ferramentas de edição. Escrita via `Bash`
 (redirecionamento, `heredoc`, `sed -i`) não é interceptada — a política do agente

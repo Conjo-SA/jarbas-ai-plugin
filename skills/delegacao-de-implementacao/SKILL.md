@@ -34,10 +34,13 @@ flowchart LR
 ```
 
 1. Antes de delegar, confirme a configuracao com a ferramenta `status`.
-2. Quebre o trabalho em unidades independentes e testaveis.
-3. Dispare um subagent `implementer` por unidade, com prompt **autocontido**
+2. Se o pedido for vago ("crie uma pagina de vendas"), **esclareca com o usuario**
+   antes de qualquer coisa: stack, escopo, dados, criterio de pronto. No maximo 3
+   perguntas objetivas. Nao invente requisitos nem tecnologias fora do repositorio.
+3. Quebre o trabalho em unidades independentes e testaveis.
+4. Dispare um subagent `implementer` por unidade, com prompt **autocontido**
    (o subagent e o modelo externo nao veem a conversa).
-4. Integre os resultados e rode build/testes de ponta a ponta.
+5. Integre os resultados e rode build/testes de ponta a ponta.
 
 ## Regras
 
@@ -51,6 +54,10 @@ flowchart LR
   `~/.jarbas-ai/credentials.json` (600) ou em variavel de ambiente.
 
 ## Enforcement (nao e so recomendacao)
+
+Esta politica e injetada automaticamente a cada turno por um hook
+`UserPromptSubmit` — o usuario nao precisa invocar nenhum comando. Um pedido como
+"crie uma pagina de vendas" ja entra por este fluxo.
 
 Um hook `PreToolUse` **nega** `Write`, `Edit`, `MultiEdit` e `NotebookEdit`
 enquanto nao existir credito de delegacao na sessao. O credito e concedido por um
